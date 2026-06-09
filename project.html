@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأثیرات پرتوها | ندا همت | HSE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;900&display=swap');
+         :root {
+            --bg: #04080f;
+            --bg2: #080f1a;
+            --card: #0d1d30;
+            --card2: #111f33;
+            --neon: #00d4ff;
+            --neon2: #00ffb3;
+            --neon3: #8b5cf6;
+            --gold: #f5c000;
+            --fire: #ff6600;
+            --red: #ff2255;
+            --green: #00e87a;
+            --white: #f0f8ff;
+            --muted: #6b90b0;
+            --border: rgba(0, 212, 255, 0.18);
+        }
+        
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: var(--bg);
+            color: var(--white);
+            overflow: hidden;
+        }
+        /* ===== NO GRAIN / NO SCANLINES — removed ===== */
+        /* ===== SLIDES ===== */
+        
+        .slide-container {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: clamp(24px, 4vw, 64px);
+            padding-bottom: 88px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: none;
+            flex-direction: column;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon) transparent;
+        }
+        
+        .slide::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .slide::-webkit-scrollbar-thumb {
+            background: var(--neon);
+            border-radius: 2px;
+        }
+        
+        .slide.active {
+            display: flex;
+            animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* ===== BACKGROUND ===== */
+        
+        .bg-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+            background-size: 56px 56px;
+        }
+        
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+        }
+        
+        .slide-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        /* ===== TYPOGRAPHY ===== */
+        
+        .hero-title {
+            font-size: clamp(3.2rem, 9vw, 6.5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -1px;
+            color: var(--white);
+            /* Simple gradient — NO filter/drop-shadow on text */
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--white) 0%, var(--neon) 60%, var(--neon2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-gold {
+            background: linear-gradient(135deg, var(--white) 0%, var(--gold) 60%, var(--fire) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .slide-title {
+            font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+        /* ===== CARDS ===== */
+        
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: clamp(14px, 2.5vw, 24px);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5), transparent);
+        }
+        
+        .card:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-accent-neon {
+            border-right: 3px solid var(--neon);
+        }
+        
+        .card-accent-gold {
+            border-right: 3px solid var(--gold);
+        }
+        
+        .card-accent-red {
+            border-right: 3px solid var(--red);
+        }
+        
+        .card-accent-green {
+            border-right: 3px solid var(--green);
+        }
+        
+        .card-accent-fire {
+            border-right: 3px solid var(--fire);
+        }
+        /* ===== BADGE ===== */
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 16px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid currentColor;
+            background: rgba(0, 0, 0, 0.3);
+            margin-bottom: 14px;
+        }
+        /* ===== DIVIDER ===== */
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon), transparent);
+            margin: 12px 0 20px;
+            opacity: 0.3;
+        }
+        /* ===== NAV ===== */
+        
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            background: rgba(4, 8, 15, 0.97);
+            border-top: 1px solid rgba(0, 212, 255, 0.12);
+            backdrop-filter: blur(20px);
+        }
+        
+        .nav-btn {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--neon);
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 0.83rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+        
+        .nav-btn:hover {
+            background: var(--neon);
+            color: #000;
+        }
+        
+        .nav-progress {
+            flex: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .nav-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon), var(--neon2));
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+        
+        .slide-counter {
+            font-size: 0.75rem;
+            color: var(--muted);
+            white-space: nowrap;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .nav-dots {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 340px;
+        }
+        
+        .nav-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+        }
+        
+        .nav-dot.active {
+            background: var(--neon);
+            width: 22px;
+            box-shadow: 0 0 8px var(--neon);
+        }
+        /* ===== SCROLL IND ===== */
+        
+        .scroll-ind {
+            position: fixed;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            z-index: 9998;
+        }
+        
+        .s-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            transition: all 0.3s;
+        }
+        
+        .s-dot.active {
+            background: var(--neon);
+            height: 20px;
+        }
+        /* ===== GRIDS ===== */
+        
+        .g2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(12px, 2vw, 20px);
+        }
+        
+        .g3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(10px, 1.8vw, 18px);
+        }
+        
+        .g4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: clamp(8px, 1.4vw, 14px);
+        }
+        
+        @media(max-width:900px) {
+            .g3 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .g4 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media(max-width:560px) {
+            .g2,
+            .g3,
+            .g4 {
+                grid-template-columns: 1fr;
+            }
+            .nav-dots {
+                display: none;
+            }
+        }
+        /* ===== TIMELINE ===== */
+        
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            right: 21px;
+            top: 22px;
+            bottom: 22px;
+            width: 1px;
+            background: linear-gradient(180deg, var(--neon), var(--neon3), var(--neon2));
+            opacity: 0.35;
+        }
+        
+        .tl-item {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0;
+            align-items: flex-start;
+        }
+        
+        .tl-num {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            border: 1px solid currentColor;
+            background: var(--bg);
+        }
+        
+        .tl-body {
+            flex: 1;
+        }
+        
+        .tl-title {
+            font-size: 0.97rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .tl-desc {
+            font-size: 0.81rem;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        /* ===== STAT ===== */
+        
+        .stat-val {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            line-height: 1;
+        }
+        
+        .stat-lbl {
+            font-size: 0.74rem;
+            color: var(--muted);
+            margin-top: 5px;
+        }
+        /* ===== TABLE ===== */
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.74rem, 1.5vw, 0.88rem);
+        }
+        
+        .data-table th {
+            background: rgba(0, 212, 255, 0.07);
+            color: var(--neon);
+            padding: 10px 12px;
+            text-align: center;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            color: var(--muted);
+            transition: all 0.2s;
+        }
+        
+        .data-table tr:hover td {
+            background: rgba(0, 212, 255, 0.04);
+            color: var(--white);
+        }
+        /* ===== DOSE BAR ===== */
+        
+        .dose-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 0.8rem;
+        }
+        
+        .dose-lbl {
+            width: 155px;
+            text-align: right;
+            color: var(--white);
+            flex-shrink: 0;
+            font-size: 0.77rem;
+        }
+        
+        .dose-bar-wrap {
+            flex: 1;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 9px;
+            overflow: hidden;
+        }
+        
+        .dose-bar {
+            height: 100%;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 0.67rem;
+            font-weight: 800;
+            color: #000;
+            white-space: nowrap;
+            transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .dose-val {
+            width: 85px;
+            text-align: left;
+            color: var(--muted);
+            flex-shrink: 0;
+            font-family: monospace;
+            font-size: 0.74rem;
+        }
+        /* ===== PYRAMID ===== */
+        
+        .pyramid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            margin: 16px 0;
+        }
+        
+        .pyr-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            height: 52px;
+            font-weight: 700;
+            font-size: clamp(0.7rem, 1.5vw, 0.88rem);
+            color: rgba(0, 0, 0, 0.9);
+            transition: transform 0.2s;
+            cursor: default;
+            position: relative;
+        }
+        
+        .pyr-row:hover {
+            transform: scaleX(1.02);
+        }
+        /* ===== CHECKLIST ===== */
+        
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        
+        .check-item:hover {
+            border-color: var(--neon);
+        }
+        
+        .check-item.done {
+            background: rgba(0, 232, 122, 0.07);
+            border-color: rgba(0, 232, 122, 0.4);
+        }
+        
+        .check-item.done .check-txt {
+            text-decoration: line-through;
+            color: var(--muted);
+        }
+        
+        .check-box {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--neon);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        
+        .check-item.done .check-box {
+            background: var(--green);
+            border-color: var(--green);
+        }
+        /* ===== GRADE TABLE ===== */
+        
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.8rem, 1.8vw, 1rem);
+        }
+        
+        .grade-table th {
+            background: rgba(0, 212, 255, 0.08);
+            color: var(--neon);
+            padding: 11px 16px;
+            text-align: center;
+            font-weight: 700;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+        }
+        
+        .grade-table td {
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            padding: 9px 14px;
+            text-align: center;
+            background: var(--card);
+        }
+        
+        .grade-input {
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: inherit;
+            text-align: center;
+            width: 100%;
+            outline: none;
+            padding: 3px;
+        }
+        
+        .grade-input:focus {
+            color: var(--neon);
+        }
+        
+        .grade-input::placeholder {
+            color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .avg-row td {
+            background: rgba(0, 212, 255, 0.08);
+            color: var(--neon);
+            font-weight: 700;
+        }
+        
+        .avg-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--neon), var(--neon2));
+            color: #000;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            min-width: 70px;
+        }
+        /* ===== ATOM ===== */
+        
+        .atom {
+            position: relative;
+            width: clamp(150px, 24vw, 240px);
+            height: clamp(150px, 24vw, 240px);
+            margin: 0 auto;
+        }
+        
+        .atom-nucleus {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ffe066, var(--fire));
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--gold), 0 0 60px rgba(255, 208, 0, 0.25);
+            animation: nuclPulse 1.8s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        @keyframes nuclPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 25px var(--gold);
+            }
+            50% {
+                box-shadow: 0 0 50px var(--gold), 0 0 90px rgba(255, 208, 0, 0.35);
+                transform: translate(-50%, -50%) scale(1.12);
+            }
+        }
+        
+        .orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 212, 255, 0.22);
+        }
+        
+        .o1 {
+            width: 100px;
+            height: 60px;
+            animation: ob1 1.9s linear infinite;
+        }
+        
+        .o2 {
+            width: 125px;
+            height: 70px;
+            animation: ob2 2.7s linear infinite;
+        }
+        
+        .o3 {
+            width: 90px;
+            height: 55px;
+            animation: ob3 2.3s linear infinite;
+        }
+        
+        @keyframes ob1 {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+        
+        @keyframes ob2 {
+            from {
+                transform: translate(-50%, -50%) rotate(60deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(420deg);
+            }
+        }
+        
+        @keyframes ob3 {
+            from {
+                transform: translate(-50%, -50%) rotate(-60deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(300deg);
+            }
+        }
+        
+        .electron {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            top: 50%;
+            left: -4px;
+            transform: translateY(-50%);
+        }
+        /* ===== COVER ===== */
+        
+        .cover-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 90px);
+            text-align: center;
+            gap: 18px;
+        }
+        
+        .info-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-size: 0.84rem;
+            transition: border-color 0.25s;
+        }
+        
+        .info-chip:hover {
+            border-color: var(--neon);
+        }
+        /* ===== PPE ===== */
+        
+        .ppe-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .ppe-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+        
+        .ppe-icon {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .ppe-std {
+            font-size: 0.62rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        
+        .ppe-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .ppe-desc {
+            font-size: 0.71rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        /* ===== PILLAR ===== */
+        
+        .pillar-wrap {
+            display: flex;
+            gap: 24px;
+            align-items: flex-end;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .pillar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pillar-bar {
+            width: clamp(72px, 12vw, 110px);
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.4rem, 2.8vw, 2.3rem);
+            position: relative;
+            overflow: hidden;
+            transition: filter 0.3s;
+        }
+        
+        .pillar-bar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent);
+        }
+        
+        .pillar:hover .pillar-bar {
+            filter: brightness(1.2);
+        }
+        
+        .pillar-lbl {
+            font-size: 0.84rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .pillar-formula {
+            font-size: 0.68rem;
+            color: var(--muted);
+            font-family: monospace;
+        }
+        /* ===== PILL ===== */
+        
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: 1px solid currentColor;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        /* ===== HAZARD SPIN ===== */
+        
+        .hazard-spin {
+            animation: hSpin 4s ease-in-out infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 12px rgba(255, 208, 0, 0.7));
+        }
+        
+        @keyframes hSpin {
+            0%,
+            100% {
+                transform: rotate(0deg) scale(1);
+            }
+            50% {
+                transform: rotate(180deg) scale(1.08);
+            }
+        }
+        /* ===== UTILS ===== */
+        
+        .flex {
+            display: flex;
+        }
+        
+        .flex-col {
+            flex-direction: column;
+        }
+        
+        .items-center {
+            align-items: center;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .gap-2 {
+            gap: 8px;
+        }
+        
+        .gap-3 {
+            gap: 12px;
+        }
+        
+        .gap-4 {
+            gap: 16px;
+        }
+        
+        .bold {
+            font-weight: 700;
+        }
+        
+        .mt-2 {
+            margin-top: 8px;
+        }
+        
+        .mt-4 {
+            margin-top: 16px;
+        }
+        
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+        
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+        
+        .flex-1 {
+            flex: 1;
+        }
+        
+        .text-sm {
+            font-size: 0.82rem;
+        }
+        
+        .text-xs {
+            font-size: 0.72rem;
+        }
+        
+        .c-neon {
+            color: var(--neon);
+        }
+        
+        .c-gold {
+            color: var(--gold);
+        }
+        
+        .c-fire {
+            color: var(--fire);
+        }
+        
+        .c-red {
+            color: var(--red);
+        }
+        
+        .c-green {
+            color: var(--green);
+        }
+        
+        .c-muted {
+            color: var(--muted);
+        }
+        
+        .c-neon3 {
+            color: var(--neon3);
+        }
+        
+        .fade {
+            animation: fadeUp 0.6s ease both;
+        }
+        
+        .fade-2 {
+            animation: fadeUp 0.6s ease 0.12s both;
+        }
+        
+        .fade-3 {
+            animation: fadeUp 0.6s ease 0.24s both;
+        }
+        
+        .fade-4 {
+            animation: fadeUp 0.6s ease 0.36s both;
+        }
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* ===== CASE FACT ===== */
+        
+        .case-fact {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.85rem;
+        }
+        
+        .case-lbl {
+            color: var(--neon);
+            font-weight: 700;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-ind" id="scrollInd"></div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <button class="nav-btn" onclick="changeSlide(-1)">◀ قبلی</button>
+        <div class="nav-dots" id="navDots"></div>
+        <div class="nav-progress">
+            <div class="nav-bar" id="navBar"></div>
+        </div>
+        <span class="slide-counter" id="slideCounter"></span>
+        <button class="nav-btn" onclick="changeSlide(1)">بعدی ▶</button>
+    </nav>
+
+    <div class="slide-container" id="sc">
+
+        <!-- ====== SLIDE 1: COVER ====== -->
+        <div class="slide active" id="s0">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+                <div class="bg-orb" style="width:580px;height:580px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(0,212,255,0.07),transparent 70%);"></div>
+                <div class="bg-orb" style="width:450px;height:450px;bottom:-120px;right:-100px;background:radial-gradient(circle,rgba(139,92,246,0.07),transparent 70%);"></div>
+            </div>
+            <div class="slide-content">
+                <div class="cover-wrap">
+
+                    <!-- Radiation SVG — clean, no excess filters -->
+                    <div class="fade" style="margin-bottom:8px;">
+                        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="120" height="120">
+          <defs>
+            <radialGradient id="rg" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffe08a"/>
+              <stop offset="60%" stop-color="#f5c000"/>
+              <stop offset="100%" stop-color="#ff6600"/>
+            </radialGradient>
+          </defs>
+          <path d="M100,100 L100,28 A72,72 0 0,1 162,64 Z" fill="url(#rg)" opacity="0.95"/>
+          <path d="M100,100 L162,64 A72,72 0 0,1 162,136 Z" fill="#04080f" opacity="0.1"/>
+          <path d="M100,100 L162,136 A72,72 0 0,1 38,136 Z" fill="url(#rg)" opacity="0.95"/>
+          <path d="M100,100 L38,136 A72,72 0 0,1 38,64 Z" fill="#04080f" opacity="0.1"/>
+          <path d="M100,100 L38,64 A72,72 0 0,1 100,28 Z" fill="url(#rg)" opacity="0.95"/>
+          <circle cx="100" cy="100" r="18" fill="#04080f"/>
+          <circle cx="100" cy="100" r="12" fill="url(#rg)"/>
+        </svg>
+                    </div>
+
+                    <div class="badge c-neon fade" style="border-color:rgba(0,212,255,0.4);">⚛ HSE — جلسه پنجم — کارشناسی</div>
+
+                    <!-- MAIN TITLE — plain readable text, no glitch/filter -->
+                    <h1 class="hero-title fade-2">
+                        <span class="gradient-text">تأثیرات پرتوها</span>
+                    </h1>
+
+                    <p class="fade-3" style="font-size:clamp(0.95rem,2.2vw,1.2rem);color:var(--neon);max-width:580px;line-height:1.8;margin-top:4px;">
+                        روش‌های کنترلی، اقدامات حفاظتی و راهکارهای کاهش آلودگی پرتویی
+                    </p>
+
+                    <div class="fade-4" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+                        <div class="info-chip">👩‍🏫 <span>استاد: محدثه شاهرخ</span></div>
+                        <div class="info-chip" style="border-color:rgba(245,192,0,0.4);">👤 <span class="c-gold bold">ندا همت | محسن بهاری |حمیدرضا افشارقاری</span></div>
+                        <div class="info-chip" style="border-color:rgba(0,255,179,0.3);">📅 <span class="c-green">۱۷ خرداد ۱۴۰۵</span></div>
+                        <div class="info-chip" style="border-color:rgba(139,92,246,0.4);">🎓 <span class="c-neon3">کاربرد کامپیوتر در HSE</span></div>
+                    </div>
+
+                    <div class="fade-4" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px;">
+                        <span class="pill c-neon" style="border-color:rgba(0,212,255,0.35);">حفاظت پرتویی</span>
+                        <span class="pill c-gold" style="border-color:rgba(245,192,0,0.35);">ALARA</span>
+                        <span class="pill c-green" style="border-color:rgba(0,232,122,0.35);">دزیمتری</span>
+                        <span class="pill c-fire" style="border-color:rgba(255,102,0,0.35);">Decontamination</span>
+                        <span class="pill c-neon3" style="border-color:rgba(139,92,246,0.35);">پایش پرتویی</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 2: TOC ====== -->
+        <div class="slide" id="s1">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">📋 فهرست مطالب</div>
+                <h2 class="slide-title fade gradient-text">سرفصل‌های ارائه</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="gap:10px;flex:1;align-content:start;">
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(2)"><span class="c-neon bold">۱.</span> مقدمه و تعاریف اولیه</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(3)"><span class="c-neon bold">۲.</span> تفاوت پرتودهی و آلودگی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(4)"><span class="c-red bold">۳.</span> اثرات حاد پرتوها</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(5)"><span class="c-fire bold">۴.</span> اثرات مزمن و بلندمدت</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(6)"><span class="c-gold bold">۵.</span> اصل ALARA</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(7)"><span class="c-green bold">۶.</span> کنترل در منبع</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(8)"><span class="c-neon bold">۷.</span> کنترل در مسیر</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(9)"><span class="c-fire bold">۸.</span> کنترل در گیرنده</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(10)"><span class="c-neon bold">۹.</span> تجهیزات PPE</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(11)"><span class="c-neon3 bold">۱۰.</span> دزیمتری و پایش</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(12)"><span class="c-red bold">۱۱.</span> رفع آلودگی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(13)"><span class="c-gold bold">۱۲.</span> مدیریت پسماند</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(14)"><span class="c-neon bold">۱۳.</span> مقایسه انواع پرتو</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(15)"><span class="c-fire bold">۱۴.</span> آلودگی خارجی / داخلی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(16)"><span class="c-neon3 bold">۱۵.</span> استانداردهای بین‌المللی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(17)"><span class="c-neon bold">۱۶.</span> کاربرد پزشکی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(18)"><span class="c-gold bold">۱۷.</span> کاربرد صنعتی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(19)"><span class="c-red bold">۱۸.</span> مطالعه موردی گوآنیا</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(20)"><span class="c-neon bold">۱۹.</span> رامسر — پرتوزایی طبیعی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(21)"><span class="c-fire bold">۲۰.</span> واکنش اضطراری</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(22)"><span class="c-neon bold">۲۱.</span> فرهنگ ایمنی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(23)"><span class="c-green bold">۲۲.</span> چک‌لیست روزانه</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(24)"><span class="c-neon3 bold">۲۳.</span> روش تحقیق</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(25)"><span class="c-green bold">۲۴.</span> یافته‌های کلیدی</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(26)"><span class="c-neon bold">۲۵.</span> پیشنهادها</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(27)"><span class="c-gold bold">۲۶.</span> نتیجه‌گیری</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(28)"><span class="c-neon bold">۲۷.</span> منابع</div>
+                    <div class="card" style="padding:13px;cursor:pointer;" onclick="goToSlide(29)"><span class="c-gold bold">۲۸.</span> سپاسگزاری و نمرات</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 3: INTRO ====== -->
+        <div class="slide" id="s2">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+                <div class="bg-orb" style="width:400px;height:400px;bottom:-80px;left:-80px;background:radial-gradient(circle,rgba(0,212,255,0.06),transparent 70%);"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">مقدمه</div>
+                <h2 class="slide-title fade gradient-text">گسترش کاربرد پرتوهای یون‌ساز</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="align-items:start;gap:20px;flex:1;">
+                    <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:270px;gap:14px;">
+                        <div class="atom">
+                            <div class="orbit o1">
+                                <div class="electron" style="background:var(--neon);"></div>
+                            </div>
+                            <div class="orbit o2">
+                                <div class="electron" style="background:var(--neon2);"></div>
+                            </div>
+                            <div class="orbit o3">
+                                <div class="electron" style="background:var(--gold);"></div>
+                            </div>
+                            <div class="atom-nucleus"></div>
+                        </div>
+                        <p class="c-neon bold text-center">پرتوهای یون‌ساز</p>
+                        <p class="c-muted text-sm text-center">در پزشکی، صنعت و پژوهش</p>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div class="card card-accent-neon">
+                            <div class="bold mb-2 c-neon">🏥 پزشکی</div>
+                            <p class="text-sm c-muted">رادیولوژی، پزشکی هسته‌ای، پرتودرمانی — ابزار حیاتی تشخیص و درمان</p>
+                        </div>
+                        <div class="card card-accent-gold">
+                            <div class="bold mb-2 c-gold">🏭 صنعت</div>
+                            <p class="text-sm c-muted">آزمون غیرمخرب، نیروگاه هسته‌ای، سنسورهای کنترل فرآیند</p>
+                        </div>
+                        <div class="card card-accent-fire">
+                            <div class="bold mb-2 c-fire">⚠️ مسئله اصلی</div>
+                            <p class="text-sm c-muted">احتمال بروز آلودگی پرتویی خارجی یا داخلی در نبود کنترل‌های مناسب</p>
+                        </div>
+                        <div class="card card-accent-green">
+                            <div class="bold mb-2 c-green">🎯 هدف ارائه</div>
+                            <p class="text-sm c-muted">بررسی روش‌های کنترل، محدودسازی و کاهش آلودگی پرتویی</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 4: DEFINITIONS ====== -->
+        <div class="slide" id="s3">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">تعاریف</div>
+                <h2 class="slide-title fade gradient-text">مفاهیم پایه پرتویی</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="margin-bottom:18px;gap:20px;">
+                    <div class="card" style="padding:24px;border-color:rgba(245,192,0,0.3);">
+                        <div style="font-size:3rem;margin-bottom:12px;">☢️</div>
+                        <h3 class="bold mb-2 c-gold">پرتودهی (Irradiation)</h3>
+                        <p class="text-sm c-muted" style="line-height:1.85;">تماس با پرتو <strong style="color:var(--white);">بدون اینکه</strong> ماده پرتوزا روی یا داخل بدن باشد. با دور شدن از منبع، خطر قطع می‌شود.</p>
+                    </div>
+                    <div class="card" style="padding:24px;border-color:rgba(255,34,85,0.3);">
+                        <div style="font-size:3rem;margin-bottom:12px;">🧪</div>
+                        <h3 class="bold mb-2 c-red">آلودگی (Contamination)</h3>
+                        <p class="text-sm c-muted" style="line-height:1.85;">وجود ماده پرتوزا <strong style="color:var(--white);">روی سطح</strong> یا <strong style="color:var(--white);">داخل بدن</strong>. خطر تا زمان حذف ماده ادامه می‌یابد.</p>
+                    </div>
+                </div>
+                <div class="card fade-3" style="padding:20px;">
+                    <h3 class="bold mb-4 c-neon">کلیدواژه‌های تخصصی</h3>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                        <span class="pill c-neon" style="border-color:rgba(0,212,255,0.35);">حفاظت پرتویی</span>
+                        <span class="pill c-gold" style="border-color:rgba(245,192,0,0.35);">ALARA</span>
+                        <span class="pill c-green" style="border-color:rgba(0,232,122,0.35);">دزیمتری</span>
+                        <span class="pill c-fire" style="border-color:rgba(255,102,0,0.35);">Decontamination</span>
+                        <span class="pill c-neon3" style="border-color:rgba(139,92,246,0.35);">پایش پرتویی</span>
+                        <span class="pill c-muted" style="border-color:rgba(107,144,176,0.35);">پرتودهی خارجی</span>
+                        <span class="pill c-red" style="border-color:rgba(255,34,85,0.35);">آلودگی داخلی</span>
+                        <span class="pill c-neon" style="border-color:rgba(0,212,255,0.35);">حدود دز</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 5: ACUTE EFFECTS ====== -->
+        <div class="slide" id="s4">
+            <div class="bg-layer">
+                <div class="bg-grid" style="background-image:linear-gradient(rgba(255,34,85,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,34,85,0.04) 1px,transparent 1px);background-size:56px 56px;"></div>
+                <div class="bg-orb" style="width:480px;height:480px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(255,34,85,0.07),transparent 70%);"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-red fade" style="border-color:rgba(255,34,85,0.4);">اثرات حاد</div>
+                <h2 class="slide-title fade" style="color:var(--red);">آسیب‌های حاد ناشی از پرتو</h2>
+                <div class="divider fade-2" style="background:linear-gradient(90deg,transparent,var(--red),transparent);"></div>
+                <div class="g2 fade-2" style="gap:14px;flex:1;align-content:start;">
+                    <div class="card" style="border-color:rgba(255,34,85,0.3);">
+                        <div style="font-size:2.3rem;margin-bottom:10px;">🔥</div>
+                        <div class="bold mb-2 c-red">سوختگی پوستی</div>
+                        <div class="text-sm c-muted" style="line-height:1.7;">ضایعات و قرمزی پوست در ناحیه تابش — با افزایش دز: تاول و زخم عمیق</div>
+                    </div>
+                    <div class="card" style="border-color:rgba(255,34,85,0.3);">
+                        <div style="font-size:2.3rem;margin-bottom:10px;">🤢</div>
+                        <div class="bold mb-2 c-red">سندرم بیماری حاد تشعشعی (ARS)</div>
+                        <div class="text-sm c-muted" style="line-height:1.7;">تهوع، استفراغ، اسهال — نشانه اولیه مواجهه بالا با پرتو</div>
+                    </div>
+                    <div class="card" style="border-color:rgba(255,102,0,0.3);">
+                        <div style="font-size:2.3rem;margin-bottom:10px;">🩸</div>
+                        <div class="bold mb-2 c-fire">سرکوب مغز استخوان</div>
+                        <div class="text-sm c-muted" style="line-height:1.7;">کاهش گلبول‌های سفید و قرمز — ضعف شدید سیستم ایمنی</div>
+                    </div>
+                    <div class="card" style="border-color:rgba(200,0,40,0.4);">
+                        <div style="font-size:2.3rem;margin-bottom:10px;">💀</div>
+                        <div class="bold mb-2" style="color:#cc0030;">مرگ سلولی (دز بالا)</div>
+                        <div class="text-sm c-muted" style="line-height:1.7;">در دزهای بالای ۶ Gy: آسیب به اندام‌های حیاتی، مرگ احتمالی</div>
+                    </div>
+                </div>
+                <div class="card fade-3 mt-4" style="padding:14px;border-color:rgba(245,192,0,0.3);">
+                    <p class="text-sm c-gold">⚡ آستانه: اثرات قطعی معمولاً بالاتر از ۱ Gy ظاهر می‌شوند. زیر آستانه، احتمال اثر بسیار پایین است.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 6: CHRONIC EFFECTS ====== -->
+        <div class="slide" id="s5">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+                <div class="bg-orb" style="width:420px;height:420px;top:-80px;left:-80px;background:radial-gradient(circle,rgba(139,92,246,0.08),transparent 70%);"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon3 fade" style="border-color:rgba(139,92,246,0.4);">اثرات مزمن</div>
+                <h2 class="slide-title fade" style="color:var(--neon3);">آسیب‌های بلندمدت پرتو</h2>
+                <div class="divider fade-2" style="background:linear-gradient(90deg,transparent,var(--neon3),transparent);"></div>
+                <div class="g3 fade-2" style="gap:14px;flex:1;align-content:start;">
+                    <div class="card" style="text-align:center;padding:18px;">
+                        <div style="font-size:1.9rem;">🧬</div>
+                        <div class="stat-val c-red mt-2" style="font-size:1.7rem;">↑ ۴۰٪</div>
+                        <div class="bold mt-2">ریسک سرطان</div>
+                        <div class="text-sm c-muted mt-2">در مواجهه مزمن با دزهای پایین</div>
+                    </div>
+                    <div class="card" style="text-align:center;padding:18px;">
+                        <div style="font-size:1.9rem;">🧪</div>
+                        <div class="stat-val c-neon3 mt-2" style="font-size:1.6rem;">جهش</div>
+                        <div class="bold mt-2">اثرات ژنتیکی</div>
+                        <div class="text-sm c-muted mt-2">تغییر DNA — انتقال به نسل بعد</div>
+                    </div>
+                    <div class="card" style="text-align:center;padding:18px;">
+                        <div style="font-size:1.9rem;">🌿</div>
+                        <div class="stat-val c-green mt-2" style="font-size:1.5rem;">پایدار</div>
+                        <div class="bold mt-2">آلودگی محیط زیست</div>
+                        <div class="text-sm c-muted mt-2">تجمع در زنجیره غذایی</div>
+                    </div>
+                    <div class="card" style="text-align:center;padding:18px;">
+                        <div style="font-size:1.9rem;">👁️</div>
+                        <div class="stat-val c-neon mt-2" style="font-size:1.5rem;">چشمی</div>
+                        <div class="bold mt-2">آب مروارید</div>
+                        <div class="text-sm c-muted mt-2">کدر شدن عدسی در مواجهه مکرر</div>
+                    </div>
+                    <div class="card" style="text-align:center;padding:18px;">
+                        <div style="font-size:1.9rem;">🫀</div>
+                        <div class="stat-val c-fire mt-2" style="font-size:1.7rem;">↑ ۲۰٪</div>
+                        <div class="bold mt-2">بیماری قلبی</div>
+                        <div class="text-sm c-muted mt-2">افزایش ریسک بیماری‌های قلبی-عروقی</div>
+                    </div>
+                    <div class="card" style="text-align:center;padding:18px;">
+                        <div style="font-size:1.9rem;">🧠</div>
+                        <div class="stat-val c-neon mt-2" style="font-size:1.4rem;">شناختی</div>
+                        <div class="bold mt-2">اثرات عصبی</div>
+                        <div class="text-sm c-muted mt-2">اختلال حافظه در کودکان</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 7: ALARA ====== -->
+        <div class="slide" id="s6">
+            <div class="bg-layer">
+                <div class="bg-grid" style="background-image:linear-gradient(rgba(0,232,122,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,232,122,0.04) 1px,transparent 1px);background-size:56px 56px;"></div>
+                <div class="bg-orb" style="width:420px;height:420px;bottom:-80px;right:-80px;background:radial-gradient(circle,rgba(0,232,122,0.07),transparent 70%);"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-green fade" style="border-color:rgba(0,232,122,0.4);">ALARA</div>
+                <h2 class="slide-title fade" style="color:var(--green);">اصل بنیادین حفاظت پرتویی</h2>
+                <div class="card fade-2" style="text-align:center;padding:22px;border-color:rgba(0,232,122,0.3);margin-bottom:20px;">
+                    <div style="font-size:clamp(1.4rem,3.5vw,2rem);font-weight:900;color:var(--gold);letter-spacing:4px;">ALARA</div>
+                    <div class="c-muted mt-2" style="font-style:italic;font-size:0.9rem;">As Low As Reasonably Achievable</div>
+                    <div class="mt-2 bold" style="font-size:1rem;">دز دریافتی را تا حد معقول و ممکن پایین نگه دار</div>
+                </div>
+                <div class="pillar-wrap fade-3">
+                    <div class="pillar">
+                        <div class="pillar-bar" style="height:170px;background:linear-gradient(180deg,rgba(0,212,255,0.9),rgba(0,212,255,0.35));">⏱️</div>
+                        <div class="pillar-lbl c-neon">زمان کمتر</div>
+                        <div class="pillar-formula">دز ∝ زمان</div>
+                        <div class="text-xs c-muted text-center" style="max-width:105px;margin-top:4px;">حداقل زمان در منطقه پرتوی</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-bar" style="height:210px;background:linear-gradient(180deg,rgba(245,192,0,0.9),rgba(245,192,0,0.35));">📏</div>
+                        <div class="pillar-lbl c-gold">فاصله بیشتر</div>
+                        <div class="pillar-formula">دز ∝ ۱/r²</div>
+                        <div class="text-xs c-muted text-center" style="max-width:105px;margin-top:4px;">با ۲× فاصله، دز ۴× کم می‌شود</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-bar" style="height:150px;background:linear-gradient(180deg,rgba(255,102,0,0.9),rgba(255,102,0,0.35));">🛡️</div>
+                        <div class="pillar-lbl c-fire">حفاظ مناسب</div>
+                        <div class="pillar-formula">سرب / بتن / آب</div>
+                        <div class="text-xs c-muted text-center" style="max-width:105px;margin-top:4px;">مواد جذب‌کننده متناسب با نوع پرتو</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 8: SOURCE CONTROL ====== -->
+        <div class="slide" id="s7">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-green fade" style="border-color:rgba(0,232,122,0.4);">کنترل در منبع</div>
+                <h2 class="slide-title fade gradient-text">سطح ۱ — Source Control</h2>
+                <div class="divider fade-2"></div>
+                <div class="timeline fade-2" style="flex:1;">
+                    <div class="tl-item">
+                        <div class="tl-num" style="color:var(--green);">۱</div>
+                        <div class="tl-body">
+                            <div class="tl-title">🏗️ محفظه‌بندی (Containment)</div>
+                            <div class="tl-desc">قرار دادن منبع پرتوزا در محفظه‌های ایزوله با مواد حفاظ مناسب (سرب، بتن، آب)</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-num" style="color:var(--neon);">۲</div>
+                        <div class="tl-body">
+                            <div class="tl-title">🔒 آب‌بندی (Sealing)</div>
+                            <div class="tl-desc">جلوگیری از هرگونه نشت مواد پرتوزا از طریق آب‌بندی کامل اتصالات</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-num" style="color:var(--gold);">۳</div>
+                        <div class="tl-body">
+                            <div class="tl-title">🔧 نگهداری پیشگیرانه</div>
+                            <div class="tl-desc">بازرسی منظم تجهیزات برای شناسایی سایش، خوردگی یا نشت احتمالی</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-num" style="color:var(--fire);">۴</div>
+                        <div class="tl-body">
+                            <div class="tl-title">🧪 تست نشت (Leak Test)</div>
+                            <div class="tl-desc">آزمایش دوره‌ای منابع بسته برای تأیید عدم نشت — طبق استاندارد ISO 9978</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card fade-3 mt-4" style="padding:14px;border-color:rgba(0,232,122,0.3);">
+                    <p class="text-sm c-green bold">🎯 هدف: جلوگیری از انتشار ماده پرتوزا به محیط کار از همان منشأ</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 9: PATHWAY CONTROL ====== -->
+        <div class="slide" id="s8">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">کنترل در مسیر</div>
+                <h2 class="slide-title fade gradient-text">سطح ۲ — Pathway Control</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="align-content:start;gap:14px;flex:1;">
+                    <div class="card card-accent-neon">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">🌬️</span><span class="bold c-neon">تهویه موضعی (هود)</span></div>
+                        <p class="text-sm c-muted">هودهای مکش برای جلوگیری از پخش آلودگی هوابرد به فضای کار</p>
+                    </div>
+                    <div class="card" style="border-right:3px solid var(--neon2);">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">🔲</span><span class="bold" style="color:var(--neon2);">فیلتر HEPA</span></div>
+                        <p class="text-sm c-muted">جذب ذرات رادیواکتیو از هوا — کارایی ≥ ۹۹.۹۷٪</p>
+                    </div>
+                    <div class="card card-accent-gold">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">⬇️</span><span class="bold c-gold">فشار منفی</span></div>
+                        <p class="text-sm c-muted">اتاق‌های با فشار منفی برای جلوگیری از خروج آلودگی به مناطق مجاور</p>
+                    </div>
+                    <div class="card card-accent-fire">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">🚫</span><span class="bold c-fire">محدودیت تردد</span></div>
+                        <p class="text-sm c-muted">کنترل ورود/خروج مناطق کنترل‌شده — ثبت تردد و تأیید صلاحیت</p>
+                    </div>
+                    <div class="card card-accent-green">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">🏗️</span><span class="bold c-green">ایزولاسیون محیط</span></div>
+                        <p class="text-sm c-muted">جداسازی فیزیکی محیط کاری با دیوارهای حفاظ مناسب</p>
+                    </div>
+                    <div class="card" style="border-right:3px solid var(--neon3);">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">📡</span><span class="bold c-neon3">پایش هوا</span></div>
+                        <p class="text-sm c-muted">آنالیز مداوم هوا توسط سنسورهای محیطی برای تشخیص آلودگی هوابرد</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 10: RECEIVER CONTROL ====== -->
+        <div class="slide" id="s9">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-fire fade" style="border-color:rgba(255,102,0,0.4);">کنترل در گیرنده</div>
+                <h2 class="slide-title fade gradient-text">سطح ۳ — Receiver Control</h2>
+                <div class="divider fade-2" style="background:linear-gradient(90deg,transparent,var(--fire),transparent);"></div>
+                <div class="g2 fade-2" style="align-content:start;gap:14px;flex:1;">
+                    <div class="card card-accent-neon">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">⏱️</span><span class="bold c-neon">کاهش زمان کار</span></div>
+                        <p class="text-sm c-muted">حداقل زمان ممکن در منطقه پرتوی — برنامه کاری چرخشی</p>
+                    </div>
+                    <div class="card card-accent-gold">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">📏</span><span class="bold c-gold">حفظ فاصله ایمن</span></div>
+                        <p class="text-sm c-muted">افزایش فاصله از منبع — استفاده از ابزار دستی برای کاهش نزدیکی</p>
+                    </div>
+                    <div class="card card-accent-fire">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">🏷️</span><span class="bold c-fire">مناطق کنترل‌شده</span></div>
+                        <p class="text-sm c-muted">تعیین و علامت‌گذاری مناطق با پرتو بالا — ممنوعیت ورود بدون مجوز</p>
+                    </div>
+                    <div class="card card-accent-green">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">📡</span><span class="bold c-green">دزیمتر فردی</span></div>
+                        <p class="text-sm c-muted">استفاده از دزیمتر — ثبت دز دریافتی — هشدار در تجاوز از حد</p>
+                    </div>
+                    <div class="card" style="border-right:3px solid var(--neon3);">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">🔄</span><span class="bold c-neon3">برنامه چرخشی</span></div>
+                        <p class="text-sm c-muted">توزیع کار بین چند نفر برای کاهش دز تجمعی هر کارگر</p>
+                    </div>
+                    <div class="card card-accent-neon">
+                        <div class="flex items-center gap-2 mb-2"><span style="font-size:1.4rem;">📚</span><span class="bold c-neon">آموزش اجباری</span></div>
+                        <p class="text-sm c-muted">دوره‌های آموزش ایمنی پرتویی و مانور رخداد — اجباری و دوره‌ای</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 11: PPE ====== -->
+        <div class="slide" id="s10">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">PPE</div>
+                <h2 class="slide-title fade gradient-text">تجهیزات حفاظت فردی در محیط پرتوی</h2>
+                <div class="divider fade-2"></div>
+                <div class="g3 fade-2" style="align-content:start;gap:12px;flex:1;">
+                    <div class="ppe-card" style="border-color:rgba(245,192,0,0.3);"><span class="ppe-icon">🧤</span>
+                        <div class="ppe-std" style="background:rgba(245,192,0,0.15);color:var(--gold);">EN421</div>
+                        <div class="ppe-name">دستکش</div>
+                        <div class="ppe-desc">لاتکس دوبل — محافظت از پرتوهای رادیواکتیو</div>
+                    </div>
+                    <div class="ppe-card" style="border-color:rgba(0,212,255,0.3);"><span class="ppe-icon">🥼</span>
+                        <div class="ppe-std" style="background:rgba(0,212,255,0.12);color:var(--neon);">EN374</div>
+                        <div class="ppe-name">لباس محافظ</div>
+                        <div class="ppe-desc">روپوش یکپارچه برای جلوگیری از آلودگی سطحی</div>
+                    </div>
+                    <div class="ppe-card" style="border-color:rgba(255,102,0,0.3);"><span class="ppe-icon">😷</span>
+                        <div class="ppe-std" style="background:rgba(255,102,0,0.12);color:var(--fire);">FFP3</div>
+                        <div class="ppe-name">ماسک تنفسی</div>
+                        <div class="ppe-desc">جلوگیری از استنشاق ذرات رادیواکتیو معلق</div>
+                    </div>
+                    <div class="ppe-card" style="border-color:rgba(0,232,122,0.3);"><span class="ppe-icon">🥽</span>
+                        <div class="ppe-std" style="background:rgba(0,232,122,0.12);color:var(--green);">EN166</div>
+                        <div class="ppe-name">عینک حفاظتی</div>
+                        <div class="ppe-desc">محافظت چشم از پاشش مایعات پرتوزا</div>
+                    </div>
+                    <div class="ppe-card" style="border-color:rgba(255,34,85,0.3);"><span class="ppe-icon">🦺</span>
+                        <div class="ppe-std" style="background:rgba(255,34,85,0.12);color:var(--red);">سربی</div>
+                        <div class="ppe-name">پیش‌بند سربی</div>
+                        <div class="ppe-desc">در محیط‌های تابش γ/X — کاهش چشمگیر دز</div>
+                    </div>
+                    <div class="ppe-card" style="border-color:rgba(139,92,246,0.3);"><span class="ppe-icon">🦿</span>
+                        <div class="ppe-std" style="background:rgba(139,92,246,0.12);color:var(--neon3);">Pb/Al</div>
+                        <div class="ppe-name">حفاظ تیروئید</div>
+                        <div class="ppe-desc">اجباری در رادیولوژی — غده تیروئید بسیار حساس</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 12: DOSIMETRY ====== -->
+        <div class="slide" id="s11">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">دزیمتری</div>
+                <h2 class="slide-title fade gradient-text">پایش پرتویی و دزیمتری فردی</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="gap:20px;flex:1;align-items:start;">
+                    <div>
+                        <h3 class="bold c-neon mb-4">انواع دزیمترهای فردی</h3>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <div class="card" style="padding:13px;display:flex;gap:12px;align-items:center;"><span style="font-size:1.7rem;">📟</span>
+                                <div>
+                                    <div class="bold" style="font-size:0.9rem;">دزیمتر فیلم (Film Badge)</div>
+                                    <div class="text-xs c-muted mt-2">ارزان — آستانه ۰.۱ mSv — پایش ماهانه</div>
+                                </div>
+                            </div>
+                            <div class="card" style="padding:13px;display:flex;gap:12px;align-items:center;"><span style="font-size:1.7rem;">💡</span>
+                                <div>
+                                    <div class="bold" style="font-size:0.9rem;">TLD (ترمولومینسانس)</div>
+                                    <div class="text-xs c-muted mt-2">دقت بالا — قابل بازخوانی — استاندارد رایج</div>
+                                </div>
+                            </div>
+                            <div class="card" style="padding:13px;display:flex;gap:12px;align-items:center;"><span style="font-size:1.7rem;">📱</span>
+                                <div>
+                                    <div class="bold" style="font-size:0.9rem;">دزیمتر الکترونیک (EPD)</div>
+                                    <div class="text-xs c-muted mt-2">نمایش لحظه‌ای دز — هشدار صوتی خودکار</div>
+                                </div>
+                            </div>
+                            <div class="card" style="padding:13px;display:flex;gap:12px;align-items:center;"><span style="font-size:1.7rem;">💍</span>
+                                <div>
+                                    <div class="bold" style="font-size:0.9rem;">حلقه TLD</div>
+                                    <div class="text-xs c-muted mt-2">پایش دز انگشت — کار با چشمه‌های باز</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="bold c-gold mb-4">حدود مجاز دز (ICRP 103)</h3>
+                        <div style="display:flex;flex-direction:column;gap:8px;" id="doseBars">
+                            <div class="dose-row">
+                                <div class="dose-lbl">کارگران حرفه‌ای</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:linear-gradient(90deg,var(--fire),var(--gold));" data-w="40">20 mSv</div>
+                                </div>
+                            </div>
+                            <div class="dose-row">
+                                <div class="dose-lbl">افراد عمومی</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:linear-gradient(90deg,var(--green),var(--neon));" data-w="8">1 mSv</div>
+                                </div>
+                            </div>
+                            <div class="dose-row">
+                                <div class="dose-lbl">زنان باردار (جنین)</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:linear-gradient(90deg,var(--red),var(--fire));" data-w="8">1 mSv</div>
+                                </div>
+                            </div>
+                            <div class="dose-row">
+                                <div class="dose-lbl">عدسی چشم</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:linear-gradient(90deg,var(--neon),var(--neon2));" data-w="40">20 mSv</div>
+                                </div>
+                            </div>
+                            <div class="dose-row">
+                                <div class="dose-lbl">پوست / دست‌ها</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:linear-gradient(90deg,var(--neon3),var(--neon));" data-w="90">500 mSv</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mt-4" style="padding:12px;border-color:rgba(245,192,0,0.3);">
+                            <p class="text-xs c-muted">منبع: ICRP Publication 103 (2007)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 13: DECONTAMINATION ====== -->
+        <div class="slide" id="s12">
+            <div class="bg-layer">
+                <div class="bg-grid" style="background-image:linear-gradient(rgba(255,34,85,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,34,85,0.04) 1px,transparent 1px);background-size:56px 56px;"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-red fade" style="border-color:rgba(255,34,85,0.4);">رفع آلودگی</div>
+                <h2 class="slide-title fade" style="color:var(--red);">فرآیند رفع آلودگی پرتویی</h2>
+                <div class="divider fade-2" style="background:linear-gradient(90deg,transparent,var(--red),transparent);"></div>
+                <div class="g2 fade-2" style="gap:14px;flex:1;align-content:start;">
+                    <div class="timeline" style="padding-right:18px;">
+                        <div class="tl-item">
+                            <div class="tl-num" style="color:var(--red);">۱</div>
+                            <div class="tl-body">
+                                <div class="tl-title">🚨 شناسایی و اعلام</div>
+                                <div class="tl-desc">تشخیص آلودگی با ابزار پایش — اعلام فوری به سرپرست</div>
+                            </div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-num" style="color:var(--fire);">۲</div>
+                            <div class="tl-body">
+                                <div class="tl-title">🔒 ایزوله‌سازی منطقه</div>
+                                <div class="tl-desc">بستن مسیر رفت‌وآمد — تعیین مرز آلوده/پاک با نوار هشدار</div>
+                            </div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-num" style="color:var(--gold);">۳</div>
+                            <div class="tl-body">
+                                <div class="tl-title">🥼 پوشش PPE کامل</div>
+                                <div class="tl-desc">پرسنل رفع آلودگی باید قبل از ورود PPE کامل بپوشند</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline" style="padding-right:18px;">
+                        <div class="tl-item">
+                            <div class="tl-num" style="color:var(--green);">۴</div>
+                            <div class="tl-body">
+                                <div class="tl-title">🧹 رفع آلودگی سطوح</div>
+                                <div class="tl-desc">شست‌وشو با شوینده مناسب — پاک‌سازی از خارج به داخل</div>
+                            </div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-num" style="color:var(--neon);">۵</div>
+                            <div class="tl-body">
+                                <div class="tl-title">🚿 رفع آلودگی افراد</div>
+                                <div class="tl-desc">درآوردن لباس آلوده — شست‌وشوی ملایم پوست — پایش مجدد</div>
+                            </div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-num" style="color:var(--neon3);">۶</div>
+                            <div class="tl-body">
+                                <div class="tl-title">📦 مدیریت پسماند</div>
+                                <div class="tl-desc">جداسازی، بسته‌بندی استاندارد، برچسب‌گذاری، دفع طبق مقررات</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 14: WASTE ====== -->
+        <div class="slide" id="s13">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-gold fade" style="border-color:rgba(245,192,0,0.4);">پسماند پرتوزا</div>
+                <h2 class="slide-title fade gradient-gold">مدیریت پسماند رادیواکتیو</h2>
+                <div class="divider fade-2" style="background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+                <div class="pyramid fade-2">
+                    <div class="pyr-row" style="width:80%;background:linear-gradient(135deg,#cc0000,#880000);">🔴 پرفعالیت — ذخیره‌سازی عمیق زیرزمینی — میله‌های سوخت هسته‌ای</div>
+                    <div class="pyr-row" style="width:64%;background:linear-gradient(135deg,var(--fire),#aa3300);">🟠 متوسط‌فعالیت — سنگریزه‌بندی — تجهیزات و محلول‌های آلوده</div>
+                    <div class="pyr-row" style="width:48%;background:linear-gradient(135deg,var(--gold),#aa8800);">🟡 کم‌فعالیت — دفن سطحی — دستکش و روپوش آلوده</div>
+                </div>
+                <div class="card fade-3 mt-4" style="padding:18px;">
+                    <h3 class="bold c-gold mb-4">الزامات برچسب‌گذاری استاندارد</h3>
+                    <div class="g3" style="gap:10px;">
+                        <div class="flex items-center gap-2 text-sm"><span>☢️</span><span class="c-muted">علامت رادیواکتیو استاندارد</span></div>
+                        <div class="flex items-center gap-2 text-sm"><span>📅</span><span class="c-muted">تاریخ تولید و نیمه‌عمر</span></div>
+                        <div class="flex items-center gap-2 text-sm"><span>⚡</span><span class="c-muted">میزان فعالیت (Bq یا Ci)</span></div>
+                        <div class="flex items-center gap-2 text-sm"><span>🏷️</span><span class="c-muted">نوع ایزوتوپ رادیواکتیو</span></div>
+                        <div class="flex items-center gap-2 text-sm"><span>🔒</span><span class="c-muted">بسته‌بندی دوجداره ایمن</span></div>
+                        <div class="flex items-center gap-2 text-sm"><span>📋</span><span class="c-muted">ثبت در سیستم ردیابی</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 15: RADIATION TYPES ====== -->
+        <div class="slide" id="s14">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">انواع پرتو</div>
+                <h2 class="slide-title fade gradient-text">مقایسه پرتوهای یون‌ساز</h2>
+                <div class="divider fade-2"></div>
+                <div style="overflow-x:auto;flex:1;" class="fade-2">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>نوع پرتو</th>
+                                <th>علامت</th>
+                                <th>نفوذپذیری</th>
+                                <th>یون‌سازی</th>
+                                <th>حفاظ</th>
+                                <th>خطر اصلی</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="color:var(--red);font-weight:700;">آلفا</td>
+                                <td>α</td>
+                                <td>کم</td>
+                                <td>خیلی زیاد</td>
+                                <td>کاغذ / پوست</td>
+                                <td style="color:var(--red);">داخلی</td>
+                            </tr>
+                            <tr>
+                                <td style="color:var(--fire);font-weight:700;">بتا</td>
+                                <td>β</td>
+                                <td>متوسط</td>
+                                <td>متوسط</td>
+                                <td>پلاستیک / آلومینیوم</td>
+                                <td style="color:var(--fire);">خارجی و داخلی</td>
+                            </tr>
+                            <tr>
+                                <td style="color:var(--gold);font-weight:700;">گاما</td>
+                                <td>γ</td>
+                                <td>خیلی زیاد</td>
+                                <td>کم</td>
+                                <td>سرب / بتن ضخیم</td>
+                                <td style="color:var(--gold);">خارجی</td>
+                            </tr>
+                            <tr>
+                                <td style="color:var(--neon);font-weight:700;">اشعه X</td>
+                                <td>X</td>
+                                <td>زیاد</td>
+                                <td>کم</td>
+                                <td>سرب / دیوار سربی</td>
+                                <td style="color:var(--neon);">خارجی</td>
+                            </tr>
+                            <tr>
+                                <td style="color:var(--neon3);font-weight:700;">نوترون</td>
+                                <td>n</td>
+                                <td>خیلی زیاد</td>
+                                <td>بالا</td>
+                                <td>آب / پارافین</td>
+                                <td style="color:var(--neon3);">خارجی</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card fade-3 mt-4" style="padding:14px;border-color:rgba(245,192,0,0.3);">
+                    <p class="text-sm c-gold">💡 نوع حفاظ بسته به نوع پرتو و انرژی آن انتخاب می‌شود — هرگز یک حفاظ برای همه مناسب نیست</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 16: EXTERNAL vs INTERNAL ====== -->
+        <div class="slide" id="s15">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-red fade" style="border-color:rgba(255,34,85,0.4);">انواع آلودگی</div>
+                <h2 class="slide-title fade gradient-text">آلودگی خارجی در مقابل داخلی</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="gap:20px;flex:1;align-items:start;">
+                    <div class="card" style="padding:24px;border-color:rgba(255,102,0,0.3);">
+                        <div style="font-size:3rem;text-align:center;margin-bottom:12px;">☢️</div>
+                        <h3 class="bold mb-3 c-fire text-center">آلودگی خارجی</h3>
+                        <div style="display:flex;flex-direction:column;gap:9px;">
+                            <div class="flex items-center gap-2 text-sm"><span class="c-fire">◆</span><span class="c-muted">مواد پرتوزا روی پوست یا لباس</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-fire">◆</span><span class="c-muted">قابل رفع با شستشوی مناسب</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-fire">◆</span><span class="c-muted">پایش با شمارنده گایگر-مولر</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-green">✓</span><span class="c-muted">خطر کمتر — قابل مدیریت</span></div>
+                        </div>
+                    </div>
+                    <div class="card" style="padding:24px;border-color:rgba(255,34,85,0.4);background:rgba(255,34,85,0.03);">
+                        <div style="font-size:3rem;text-align:center;margin-bottom:12px;">☠️</div>
+                        <h3 class="bold mb-3 c-red text-center">آلودگی داخلی — خطرناک‌تر</h3>
+                        <div style="display:flex;flex-direction:column;gap:9px;">
+                            <div class="flex items-center gap-2 text-sm"><span class="c-red">◆</span><span class="c-muted">ورود از طریق تنفس، خوردن یا زخم</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-red">◆</span><span class="c-muted">تماس مستقیم با اندام‌های داخلی</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-red">◆</span><span class="c-muted">درمان: داروهای چلاتور، ید پایدار</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-red">⚠️</span><span class="c-red bold">خطر بسیار بیشتر از آلودگی خارجی</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 17: STANDARDS ====== -->
+        <div class="slide" id="s16">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">استانداردها</div>
+                <h2 class="slide-title fade gradient-text">استانداردهای بین‌المللی حفاظت پرتویی</h2>
+                <div class="divider fade-2"></div>
+                <div style="display:flex;flex-direction:column;gap:12px;flex:1;" class="fade-2">
+                    <div class="card card-accent-neon" style="padding:18px;">
+                        <div class="flex items-center gap-3 mb-2"><span class="bold c-neon" style="font-size:1.3rem;min-width:60px;">ICRP</span><span class="bold">کمیسیون بین‌المللی حفاظت پرتویی</span></div>
+                        <p class="text-sm c-muted">تعیین حدود دز و اصول کلی حفاظت — Publication 103 (2007) مرجع اصلی جهانی</p>
+                    </div>
+                    <div class="card card-accent-gold" style="padding:18px;">
+                        <div class="flex items-center gap-3 mb-2"><span class="bold c-gold" style="font-size:1.3rem;min-width:60px;">IAEA</span><span class="bold">آژانس بین‌المللی انرژی اتمی</span></div>
+                        <p class="text-sm c-muted">استانداردهای ایمنی هسته‌ای — GSR Part 3 (2014)</p>
+                    </div>
+                    <div class="card card-accent-fire" style="padding:18px;">
+                        <div class="flex items-center gap-3 mb-2"><span class="bold c-fire" style="font-size:1.3rem;min-width:60px;">NCRP</span><span class="bold">شورای ملی حفاظت و اندازه‌گیری</span></div>
+                        <p class="text-sm c-muted">توصیه‌های کاربردی برای محیط‌های پزشکی، صنعتی و تحقیقاتی</p>
+                    </div>
+                    <div class="card card-accent-green" style="padding:18px;">
+                        <div class="flex items-center gap-3 mb-2"><span class="bold c-green" style="font-size:1.3rem;min-width:60px;">WHO</span><span class="bold">سازمان بهداشت جهانی</span></div>
+                        <p class="text-sm c-muted">حفاظت از سلامت عمومی در برابر پرتوهای طبیعی و مصنوعی</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 18: MEDICAL APPLICATIONS ====== -->
+        <div class="slide" id="s17">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">کاربرد پزشکی</div>
+                <h2 class="slide-title fade gradient-text">کاربرد پرتوها در پزشکی</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="align-content:start;gap:14px;flex:1;">
+                    <div class="card card-accent-neon" style="display:flex;gap:14px;align-items:flex-start;padding:18px;"><span style="font-size:2.3rem;flex-shrink:0;">🔬</span>
+                        <div>
+                            <div class="bold mb-2 c-neon">رادیولوژی</div>
+                            <p class="text-sm c-muted">تصویربرداری اشعه X — تشخیص شکستگی، توده‌ها و بیماری‌های ریه</p>
+                            <div class="pill mt-2 c-neon" style="font-size:0.67rem;">دز: 0.1–10 mSv</div>
+                        </div>
+                    </div>
+                    <div class="card" style="border-right:3px solid var(--neon2);display:flex;gap:14px;align-items:flex-start;padding:18px;"><span style="font-size:2.3rem;flex-shrink:0;">🏥</span>
+                        <div>
+                            <div class="bold mb-2" style="color:var(--neon2);">پزشکی هسته‌ای</div>
+                            <p class="text-sm c-muted">رادیوایزوتوپ‌ها برای اسکن اندام‌ها — PET scan و SPECT</p>
+                            <div class="pill mt-2" style="color:var(--neon2);font-size:0.67rem;">دز: 5–25 mSv</div>
+                        </div>
+                    </div>
+                    <div class="card card-accent-fire" style="display:flex;gap:14px;align-items:flex-start;padding:18px;"><span style="font-size:2.3rem;flex-shrink:0;">⚡</span>
+                        <div>
+                            <div class="bold mb-2 c-fire">پرتودرمانی</div>
+                            <p class="text-sm c-muted">درمان تومورهای سرطانی با دزهای بالا — IMRT و SBRT</p>
+                            <div class="pill mt-2 c-fire" style="font-size:0.67rem;">دز: 20–80 Gy</div>
+                        </div>
+                    </div>
+                    <div class="card card-accent-green" style="display:flex;gap:14px;align-items:flex-start;padding:18px;"><span style="font-size:2.3rem;flex-shrink:0;">💉</span>
+                        <div>
+                            <div class="bold mb-2 c-green">رادیوداروها</div>
+                            <p class="text-sm c-muted">تشخیص و درمان با مواد پرتوزا — I-131 برای تیروئید</p>
+                            <div class="pill mt-2 c-green" style="font-size:0.67rem;">متغیر بسته به نوع</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 19: INDUSTRIAL APPLICATIONS ====== -->
+        <div class="slide" id="s18">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-gold fade" style="border-color:rgba(245,192,0,0.4);">کاربرد صنعتی</div>
+                <h2 class="slide-title fade gradient-gold">کاربرد پرتوها در صنعت</h2>
+                <div class="divider fade-2" style="background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+                <div class="g3 fade-2" style="align-content:start;gap:12px;flex:1;">
+                    <div class="card" style="padding:16px;text-align:center;">
+                        <div style="font-size:2rem;margin-bottom:8px;">🔍</div>
+                        <div class="bold c-gold mb-2">آزمون غیرمخرب</div>
+                        <p class="text-xs c-muted">بررسی جوش‌ها و پایپ‌لاین‌ها بدون تخریب</p>
+                    </div>
+                    <div class="card" style="padding:16px;text-align:center;">
+                        <div style="font-size:2rem;margin-bottom:8px;">⚡</div>
+                        <div class="bold c-fire mb-2">نیروگاه هسته‌ای</div>
+                        <p class="text-xs c-muted">تولید برق از شکافت هسته‌ای کنترل‌شده</p>
+                    </div>
+                    <div class="card" style="padding:16px;text-align:center;">
+                        <div style="font-size:2rem;margin-bottom:8px;">📊</div>
+                        <div class="bold c-neon mb-2">کنترل فرآیند</div>
+                        <p class="text-xs c-muted">سنج‌های سطح، ضخامت و چگالی</p>
+                    </div>
+                    <div class="card" style="padding:16px;text-align:center;">
+                        <div style="font-size:2rem;margin-bottom:8px;">🦠</div>
+                        <div class="bold c-green mb-2">استریلیزاسیون</div>
+                        <p class="text-xs c-muted">ضدعفونی تجهیزات پزشکی با گاما</p>
+                    </div>
+                    <div class="card" style="padding:16px;text-align:center;">
+                        <div style="font-size:2rem;margin-bottom:8px;">🔬</div>
+                        <div class="bold" style="color:var(--neon2);" class="mb-2">تحقیقات</div>
+                        <p class="text-xs c-muted">مارکر رادیواکتیو برای ردیابی</p>
+                    </div>
+                    <div class="card" style="padding:16px;text-align:center;">
+                        <div style="font-size:2rem;margin-bottom:8px;">💎</div>
+                        <div class="bold c-neon3 mb-2">اکتشاف معدنی</div>
+                        <p class="text-xs c-muted">کاروتاژ رادیواکتیو برای شناسایی لایه‌ها</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 20: CASE STUDY ====== -->
+        <div class="slide" id="s19">
+            <div class="bg-layer">
+                <div class="bg-grid" style="background-image:linear-gradient(rgba(255,34,85,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,34,85,0.04) 1px,transparent 1px);background-size:56px 56px;"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-red fade" style="border-color:rgba(255,34,85,0.4);">مطالعه موردی</div>
+                <h2 class="slide-title fade gradient-text">حادثه گوآنیا ۱۹۸۷ — برزیل</h2>
+                <div class="divider fade-2" style="background:linear-gradient(90deg,transparent,var(--red),transparent);"></div>
+                <div class="g2 fade-2" style="gap:20px;flex:1;align-items:start;">
+                    <div class="card" style="padding:20px;border-color:rgba(255,34,85,0.4);">
+                        <div style="text-align:center;font-size:3.2rem;margin-bottom:12px;" class="hazard-spin">☢️</div>
+                        <div style="display:flex;flex-direction:column;">
+                            <div class="case-fact"><span class="case-lbl">📍 مکان</span><span>گوآنیا، برزیل</span></div>
+                            <div class="case-fact"><span class="case-lbl">📅 تاریخ</span><span>سپتامبر ۱۹۸۷</span></div>
+                            <div class="case-fact"><span class="case-lbl">☢️ ماده</span><span>سزیوم-۱۳۷ (Cs-137)</span></div>
+                            <div class="case-fact"><span class="case-lbl">⚡ فعالیت</span><span class="c-red bold">50 TBq</span></div>
+                            <div class="case-fact"><span class="case-lbl">👥 آسیب‌دیده</span><span class="c-red bold">249 نفر آلوده — 4 کشته</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card" style="padding:18px;margin-bottom:14px;border-color:rgba(255,102,0,0.4);">
+                            <h3 class="bold c-fire mb-3">⚠️ دلایل وقوع</h3>
+                            <div style="display:flex;flex-direction:column;gap:8px;">
+                                <div class="flex items-center gap-2 text-sm"><span class="c-fire">⚡</span><span class="c-muted">رها کردن تجهیزات پزشکی بدون ثبت</span></div>
+                                <div class="flex items-center gap-2 text-sm"><span class="c-fire">⚡</span><span class="c-muted">عدم آموزش عمومی درباره خطر</span></div>
+                                <div class="flex items-center gap-2 text-sm"><span class="c-fire">⚡</span><span class="c-muted">جذابیت ظاهری پودر آبی درخشان</span></div>
+                            </div>
+                        </div>
+                        <div class="card" style="padding:18px;border-color:rgba(245,192,0,0.3);">
+                            <h3 class="bold c-gold mb-3">📌 درس‌های آموخته‌شده</h3>
+                            <div style="display:flex;flex-direction:column;gap:8px;">
+                                <div class="flex items-center gap-2 text-sm"><span class="c-gold">✓</span><span class="c-muted">نظارت بر تجهیزات پرتوزا مادام‌العمر الزامی است</span></div>
+                                <div class="flex items-center gap-2 text-sm"><span class="c-gold">✓</span><span class="c-muted">آموزش عمومی بخشی جدانشدنی از حفاظت است</span></div>
+                                <div class="flex items-center gap-2 text-sm"><span class="c-gold">✓</span><span class="c-muted">ثبت و ردیابی تمام منابع رادیواکتیو اجباری</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 21: RAMSAR ====== -->
+        <div class="slide" id="s20">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">پرتوزایی طبیعی</div>
+                <h2 class="slide-title fade gradient-text">رامسر — پرتابش‌ترین منطقه طبیعی جهان</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="gap:20px;flex:1;align-items:start;">
+                    <div>
+                        <h3 class="bold c-neon mb-4">📊 مقایسه پرتوزایی جهانی</h3>
+                        <div style="display:flex;flex-direction:column;gap:8px;" id="doseBars2">
+                            <div class="dose-row">
+                                <div class="dose-lbl" style="font-size:0.75rem;">میانگین جهانی</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:var(--green);" data-w="12">2.4 mSv/سال</div>
+                                </div>
+                            </div>
+                            <div class="dose-row">
+                                <div class="dose-lbl" style="font-size:0.75rem;">کرالا، هند</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:var(--neon);" data-w="20">3.8 mSv/سال</div>
+                                </div>
+                            </div>
+                            <div class="dose-row">
+                                <div class="dose-lbl" style="font-size:0.75rem;">گواراپاری، برزیل</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:var(--gold);" data-w="30">5.5 mSv/سال</div>
+                                </div>
+                            </div>
+                            <div class="dose-row">
+                                <div class="dose-lbl" style="font-size:0.75rem;">رامسر (میانگین)</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:var(--fire);" data-w="55">10.2 mSv/سال</div>
+                                </div>
+                            </div>
+                            <div class="dose-row">
+                                <div class="dose-lbl" style="font-size:0.75rem;">رامسر (حداکثر)</div>
+                                <div class="dose-bar-wrap">
+                                    <div class="dose-bar" style="width:0%;background:var(--red);" data-w="95">260 mSv/سال</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div class="card card-accent-neon" style="padding:15px;">
+                            <div class="bold c-neon mb-2">🌋 منشأ</div>
+                            <p class="text-sm c-muted">چشمه‌های آب گرم رادیوم‌دار و سنگ‌های مونازیت حاوی توریوم-232</p>
+                        </div>
+                        <div class="card card-accent-green" style="padding:15px;">
+                            <div class="bold c-green mb-2">🏘️ جمعیت</div>
+                            <p class="text-sm c-muted">مطالعات نشان‌دهنده افزایش معنی‌داری در میزان سرطان ساکنان نیست</p>
+                        </div>
+                        <div class="card card-accent-gold" style="padding:15px;">
+                            <div class="bold c-gold mb-2">🔬 هورمسیس</div>
+                            <p class="text-sm c-muted">دزهای پایین ممکن است مکانیسم‌های دفاعی بدن را تقویت کند</p>
+                        </div>
+                        <div class="card card-accent-red" style="padding:15px;">
+                            <div class="bold c-red mb-2">⚠️ توجه</div>
+                            <p class="text-sm c-muted">رامسر یک استثنا است — نباید برای توجیه آلودگی مصنوعی استفاده شود</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 22: EMERGENCY ====== -->
+        <div class="slide" id="s21">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-fire fade" style="border-color:rgba(255,102,0,0.4);">اضطرار پرتوی</div>
+                <h2 class="slide-title fade gradient-text">واکنش اضطراری پرتوی</h2>
+                <div class="divider fade-2" style="background:linear-gradient(90deg,transparent,var(--fire),transparent);"></div>
+                <div class="g2 fade-2" style="gap:16px;margin-bottom:16px;">
+                    <div class="card" style="padding:16px;border-color:rgba(255,34,85,0.4);">
+                        <div class="bold c-red mb-3">⚡ اقدامات فوری</div>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div class="flex items-center gap-2 text-sm"><span class="c-red">۱.</span><span class="c-muted">قطع کار و فاصله گرفتن فوری</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-red">۲.</span><span class="c-muted">اعلام فوری به سرپرست و تیم اضطراری</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-red">۳.</span><span class="c-muted">خروج از منطقه آلوده — بدون برداشتن وسایل</span></div>
+                        </div>
+                    </div>
+                    <div class="card" style="padding:16px;border-color:rgba(255,102,0,0.4);">
+                        <div class="bold c-fire mb-3">🛡️ اقدامات اولیه تیم</div>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div class="flex items-center gap-2 text-sm"><span class="c-fire">۴.</span><span class="c-muted">پوشش PPE کامل قبل از ورود به منطقه</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-fire">۵.</span><span class="c-muted">پایش آلودگی اولیه با ابزار مناسب</span></div>
+                            <div class="flex items-center gap-2 text-sm"><span class="c-fire">۶.</span><span class="c-muted">ایزوله‌سازی و اطلاع‌رسانی به مقامات</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card fade-3" style="padding:16px;">
+                    <h3 class="bold c-gold mb-3">📊 سطوح اضطرار (IAEA)</h3>
+                    <div class="g4" style="gap:8px;">
+                        <div style="background:rgba(0,232,122,0.08);border:1px solid var(--green);border-radius:10px;padding:10px;text-align:center;">
+                            <div class="c-green bold text-sm">سطح ۱</div>
+                            <div class="text-xs c-muted mt-1">رخداد جزئی</div>
+                        </div>
+                        <div style="background:rgba(245,192,0,0.08);border:1px solid var(--gold);border-radius:10px;padding:10px;text-align:center;">
+                            <div class="c-gold bold text-sm">سطح ۲</div>
+                            <div class="text-xs c-muted mt-1">رخداد متوسط</div>
+                        </div>
+                        <div style="background:rgba(255,102,0,0.08);border:1px solid var(--fire);border-radius:10px;padding:10px;text-align:center;">
+                            <div class="c-fire bold text-sm">سطح ۳</div>
+                            <div class="text-xs c-muted mt-1">اضطرار بزرگ</div>
+                        </div>
+                        <div style="background:rgba(255,34,85,0.08);border:1px solid var(--red);border-radius:10px;padding:10px;text-align:center;">
+                            <div class="c-red bold text-sm">سطح ۴</div>
+                            <div class="text-xs c-muted mt-1">حادثه هسته‌ای</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 23: SAFETY CULTURE ====== -->
+        <div class="slide" id="s22">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">فرهنگ ایمنی</div>
+                <h2 class="slide-title fade gradient-text">هرم فرهنگ ایمنی پرتوی</h2>
+                <div class="divider fade-2"></div>
+                <div class="pyramid fade-2" style="flex:1;justify-content:center;">
+                    <div class="pyr-row" style="width:86%;background:linear-gradient(135deg,rgba(255,34,85,0.85),rgba(160,0,0,0.9));">🎖️ تعهد مدیریت ارشد — پایه همه چیز</div>
+                    <div class="pyr-row" style="width:72%;background:linear-gradient(135deg,rgba(255,102,0,0.85),rgba(180,50,0,0.9));">📋 خط‌مشی و دستورالعمل‌های مدون</div>
+                    <div class="pyr-row" style="width:58%;background:linear-gradient(135deg,rgba(245,192,0,0.85),rgba(180,140,0,0.9));">🎓 آموزش و صلاحیت‌سنجی کارکنان</div>
+                    <div class="pyr-row" style="width:44%;background:linear-gradient(135deg,rgba(0,232,122,0.8),rgba(0,160,80,0.9));">📊 سیستم گزارش‌دهی رخداد</div>
+                    <div class="pyr-row" style="width:30%;background:linear-gradient(135deg,rgba(0,212,255,0.8),rgba(0,160,180,0.9));">🔄 بهبود مستمر</div>
+                    <div class="pyr-row" style="width:16%;background:linear-gradient(135deg,rgba(139,92,246,0.9),rgba(80,0,200,0.9));font-size:1.3rem;">⭐</div>
+                </div>
+                <div class="card fade-3 mt-4" style="padding:12px;text-align:center;">
+                    <p class="text-sm c-muted">فرهنگ ایمنی یک تعهد سازمانی است — نه یک چک‌لیست یک‌باره</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 24: CHECKLIST ====== -->
+        <div class="slide" id="s23">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-green fade" style="border-color:rgba(0,232,122,0.4);">چک‌لیست</div>
+                <h2 class="slide-title fade gradient-text">چک‌لیست روزانه ایمنی پرتوی</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="align-content:start;gap:20px;flex:1;">
+                    <div>
+                        <h3 class="bold c-neon mb-3">قبل از شروع کار</h3>
+                        <div class="checklist">
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">دزیمتر فردی پوشیده شده؟</span></div>
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">PPE کامل در دسترس است؟</span></div>
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">تابلوهای هشدار نصب شده؟</span></div>
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">دستورالعمل مطالعه شده؟</span></div>
+                        </div>
+                        <h3 class="bold c-gold mb-3 mt-4">حین کار</h3>
+                        <div class="checklist">
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">زمان مجاز رعایت می‌شود؟</span></div>
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">فاصله ایمن حفظ شده؟</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="bold c-fire mb-3">پایان کار</h3>
+                        <div class="checklist">
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">پایش آلودگی انجام شد؟</span></div>
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">دزیمتر ثبت شد؟</span></div>
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">تجهیزات ذخیره‌سازی شد؟</span></div>
+                            <div class="check-item" onclick="tglChk(this)">
+                                <div class="check-box"><span style="display:none;color:#000;font-size:12px;">✓</span></div><span class="check-txt text-sm">گزارش رخداد تهیه شد؟</span></div>
+                        </div>
+                        <div class="card mt-4" style="padding:14px;border-color:rgba(0,232,122,0.3);">
+                            <p class="text-sm c-green bold">✅ روی هر آیتم کلیک کنید تا تیک بخورد</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 25: METHODOLOGY ====== -->
+        <div class="slide" id="s24">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">روش تحقیق</div>
+                <h2 class="slide-title fade gradient-text">روش‌شناسی مطالعه</h2>
+                <div class="divider fade-2"></div>
+                <div class="card fade-2" style="padding:15px;border-color:rgba(0,212,255,0.4);margin-bottom:16px;text-align:center;"><span class="bold c-neon">نوع مطالعه: مروری روایی (Narrative Review) — کتابخانه‌ای</span></div>
+                <div class="g3 fade-3" style="align-content:start;gap:14px;flex:1;">
+                    <div class="card" style="padding:18px;border-color:rgba(0,212,255,0.3);">
+                        <div style="width:42px;height:42px;border-radius:50%;background:rgba(0,212,255,0.15);border:2px solid var(--neon);display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--neon);margin:0 auto 12px;">۱</div>
+                        <h3 class="bold c-neon text-center mb-3">گردآوری داده‌ها</h3>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div class="text-xs c-muted flex items-center gap-2"><span>◆</span>منابع آموزشی حفاظت پرتویی</div>
+                            <div class="text-xs c-muted flex items-center gap-2"><span>◆</span>دستورالعمل‌های ICRP و IAEA</div>
+                        </div>
+                    </div>
+                    <div class="card" style="padding:18px;border-color:rgba(245,192,0,0.3);">
+                        <div style="width:42px;height:42px;border-radius:50%;background:rgba(245,192,0,0.15);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--gold);margin:0 auto 12px;">۲</div>
+                        <h3 class="bold c-gold text-center mb-3">چارچوب تحلیل</h3>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div class="text-xs c-muted flex items-center gap-2"><span>◆</span>کنترل در منبع</div>
+                            <div class="text-xs c-muted flex items-center gap-2"><span>◆</span>کنترل در مسیر</div>
+                            <div class="text-xs c-muted flex items-center gap-2"><span>◆</span>کنترل در گیرنده</div>
+                        </div>
+                    </div>
+                    <div class="card" style="padding:18px;border-color:rgba(0,232,122,0.3);">
+                        <div style="width:42px;height:42px;border-radius:50%;background:rgba(0,232,122,0.15);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--green);margin:0 auto 12px;">۳</div>
+                        <h3 class="bold c-green text-center mb-3">معیارهای ارزیابی</h3>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div class="text-xs c-muted flex items-center gap-2"><span>◆</span>کاهش احتمال تماس</div>
+                            <div class="text-xs c-muted flex items-center gap-2"><span>◆</span>کاهش دز تجمعی</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 26: FINDINGS ====== -->
+        <div class="slide" id="s25">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-green fade" style="border-color:rgba(0,232,122,0.4);">نتایج</div>
+                <h2 class="slide-title fade gradient-text">یافته‌های کلیدی</h2>
+                <div class="divider fade-2"></div>
+                <div class="g3 fade-2" style="margin-bottom:16px;">
+                    <div class="card" style="text-align:center;padding:20px;">
+                        <div class="stat-val c-neon" style="font-size:3.2rem;">۳</div>
+                        <div class="stat-lbl">سطح کنترل</div>
+                        <div class="text-xs c-muted mt-2">منبع / مسیر / گیرنده</div>
+                    </div>
+                    <div class="card" style="text-align:center;padding:20px;">
+                        <div class="stat-val c-gold" style="font-size:1.7rem;letter-spacing:3px;">ALARA</div>
+                        <div class="stat-lbl">اصل بنیادین</div>
+                        <div class="text-xs c-muted mt-2">فلسفه حفاظت پرتویی</div>
+                    </div>
+                    <div class="card" style="text-align:center;padding:20px;">
+                        <div class="stat-val c-green" style="font-size:2.3rem;">ترکیبی</div>
+                        <div class="stat-lbl">رویکرد</div>
+                        <div class="text-xs c-muted mt-2">مهندسی + مدیریتی + فردی</div>
+                    </div>
+                </div>
+                <div class="card fade-3" style="padding:20px;border-color:rgba(0,232,122,0.3);flex:1;">
+                    <h3 class="bold c-green mb-4">مهم‌ترین نتایج مرور</h3>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div class="flex items-center gap-3"><span class="c-green" style="font-size:1.2rem;">✅</span><span class="text-sm c-muted">پیشگیری همیشه کم‌هزینه‌تر و مؤثرتر از رفع آلودگی پس از حادثه است</span></div>
+                        <div class="flex items-center gap-3"><span class="c-gold" style="font-size:1.2rem;">⚠️</span><span class="text-sm c-muted">آموزش و پایش به‌تنهایی کافی نیست — باید با کنترل مهندسی همراه شود</span></div>
+                        <div class="flex items-center gap-3"><span class="c-fire" style="font-size:1.2rem;">🚨</span><span class="text-sm c-muted">در رخدادها: اولویت با حفظ جان، سپس ایزوله کردن، پایش و پاکسازی</span></div>
+                        <div class="flex items-center gap-3"><span class="c-neon" style="font-size:1.2rem;">🔬</span><span class="text-sm c-muted">ترکیب روش‌های مهندسی + مدیریتی + فردی بهترین نتیجه را می‌دهد</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 27: RECOMMENDATIONS ====== -->
+        <div class="slide" id="s26">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">پیشنهادها</div>
+                <h2 class="slide-title fade gradient-text">پیشنهادهای اجرایی</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="align-content:start;gap:12px;flex:1;">
+                    <div class="card card-accent-red" style="padding:15px;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="pill c-red" style="font-size:0.68rem;">فوری</div><span class="bold">📋 چک‌لیست روزانه</span></div>
+                        <p class="text-sm c-muted">تدوین و اجرا — تأیید توسط سرپرست هر روز</p>
+                    </div>
+                    <div class="card card-accent-fire" style="padding:15px;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="pill c-fire" style="font-size:0.68rem;">مهم</div><span class="bold">🎓 آموزش دوره‌ای</span></div>
+                        <p class="text-sm c-muted">آموزش هر ۶ ماه + مانور رخداد پرتویی سالانه</p>
+                    </div>
+                    <div class="card card-accent-gold" style="padding:15px;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="pill c-gold" style="font-size:0.68rem;">اولویت</div><span class="bold">🏗️ کنترل مهندسی</span></div>
+                        <p class="text-sm c-muted">افزایش هود، فیلتر، ایزولاسیون — نه اتکا صرف به PPE</p>
+                    </div>
+                    <div class="card card-accent-green" style="padding:15px;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="pill c-green" style="font-size:0.68rem;">توصیه</div><span class="bold">📊 سیستم ثبت دز</span></div>
+                        <p class="text-sm c-muted">به‌روزرسانی سیستم ثبت دز با نرم‌افزار تخصصی</p>
+                    </div>
+                    <div class="card card-accent-neon" style="padding:15px;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="pill c-neon" style="font-size:0.68rem;">ضروری</div><span class="bold">♻️ مدیریت پسماند</span></div>
+                        <p class="text-sm c-muted">استاندارد مدیریت پسماند پرتوزا طبق IAEA</p>
+                    </div>
+                    <div class="card" style="border-right:3px solid var(--neon3);padding:15px;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="pill c-neon3" style="font-size:0.68rem;">توصیه</div><span class="bold">📡 پایش محیطی</span></div>
+                        <p class="text-sm c-muted">نصب سیستم پایش پیوسته با هشدار خودکار</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 28: CONCLUSION ====== -->
+        <div class="slide" id="s27">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+                <div class="bg-orb" style="width:450px;height:450px;bottom:-80px;right:-80px;background:radial-gradient(circle,rgba(0,212,255,0.06),transparent 70%);"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">نتیجه‌گیری</div>
+                <h2 class="slide-title fade gradient-text">نتیجه‌گیری نهایی</h2>
+                <div class="divider fade-2"></div>
+                <div class="card fade-2" style="padding:24px;border-color:rgba(245,192,0,0.3);border-right:4px solid var(--gold);margin-bottom:16px;">
+                    <p style="font-size:clamp(0.9rem,2vw,1.1rem);line-height:1.9;">برای کاهش آلودگی پرتویی، باید یک <strong class="c-neon">سیستم یکپارچه</strong> اجرا شود که شامل اصول <strong class="c-gold">زمان–فاصله–حفاظ</strong> و فلسفه ALARA، کنترل در سه سطح منبع/مسیر/گیرنده، پایش مداوم، آموزش و مدیریت درست پسماند
+                        باشد.
+                    </p>
+                </div>
+                <div class="g3 fade-3" style="margin-bottom:16px;gap:12px;">
+                    <div class="card" style="padding:16px;text-align:center;"><span style="font-size:2rem;">⏱️</span>
+                        <div class="bold c-neon mt-2">کوتاه‌مدت</div>
+                        <p class="text-xs c-muted mt-2">کاهش فوری دز دریافتی کارکنان</p>
+                    </div>
+                    <div class="card" style="padding:16px;text-align:center;"><span style="font-size:2rem;">📅</span>
+                        <div class="bold c-gold mt-2">میان‌مدت</div>
+                        <p class="text-xs c-muted mt-2">کاهش آلودگی محیط کاری</p>
+                    </div>
+                    <div class="card" style="padding:16px;text-align:center;"><span style="font-size:2rem;">🔬</span>
+                        <div class="bold c-green mt-2">بلندمدت</div>
+                        <p class="text-xs c-muted mt-2">کاهش معنی‌دار ریسک سرطان</p>
+                    </div>
+                </div>
+                <div class="card fade-4" style="padding:14px;text-align:center;border-color:rgba(0,212,255,0.4);">
+                    <p class="bold c-neon">این رویکرد خطرات کوتاه‌مدت و بلندمدت را به شکل معنی‌داری کاهش می‌دهد ☢️</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 29: REFERENCES ====== -->
+        <div class="slide" id="s28">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+            </div>
+            <div class="slide-content">
+                <div class="badge c-neon fade">منابع</div>
+                <h2 class="slide-title fade gradient-text">منابع و مراجع</h2>
+                <div class="divider fade-2"></div>
+                <div class="g2 fade-2" style="align-content:start;gap:12px;flex:1;">
+                    <div class="card card-accent-neon" style="padding:16px;">
+                        <div class="bold c-neon mb-2">📚 کتب و جزوات</div>
+                        <p class="text-sm c-muted">«حفاظت در برابر پرتوها» و «فیزیک بهداشت / بهداشت پرتویی»</p>
+                    </div>
+                    <div class="card card-accent-gold" style="padding:16px;">
+                        <div class="bold c-gold mb-2">📜 ICRP</div>
+                        <p class="text-sm c-muted">ICRP Publication 103: The 2007 Recommendations of ICRP</p>
+                    </div>
+                    <div class="card card-accent-fire" style="padding:16px;">
+                        <div class="bold c-fire mb-2">🌐 IAEA</div>
+                        <p class="text-sm c-muted">IAEA GSR Part 3: International Basic Safety Standards (2014)</p>
+                    </div>
+                    <div class="card card-accent-green" style="padding:16px;">
+                        <div class="bold c-green mb-2">📖 ISO</div>
+                        <p class="text-sm c-muted">ISO 4037 — Radiation protection | ISO 9978 — Sealed radioactive sources</p>
+                    </div>
+                    <div class="card" style="border-right:3px solid var(--neon3);padding:16px;">
+                        <div class="bold c-neon3 mb-2">🔬 مجلات علمی</div>
+                        <p class="text-sm c-muted">Health Physics Journal | Radiation Protection Dosimetry</p>
+                    </div>
+                    <div class="card card-accent-neon" style="padding:16px;">
+                        <div class="bold c-neon mb-2">🌍 WHO</div>
+                        <p class="text-sm c-muted">World Health Organization — Radiation and Health Fact Sheets (2023)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SLIDE 30: THANK YOU + GRADES ====== -->
+        <div class="slide" id="s29">
+            <div class="bg-layer">
+                <div class="bg-grid"></div>
+                <div class="bg-orb" style="width:600px;height:600px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,212,255,0.05),transparent 70%);"></div>
+            </div>
+            <div class="slide-content">
+                <div style="text-align:center;margin-bottom:20px;" class="fade">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="90" height="90" style="margin-bottom:10px;opacity:0.85;">
+        <defs><radialGradient id="rg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e0ffff"/><stop offset="100%" stop-color="#00d4ff"/></radialGradient></defs>
+        <path d="M100,100 L100,28 A72,72 0 0,1 162,64 Z" fill="url(#rg2)" opacity="0.9"/>
+        <path d="M100,100 L162,136 A72,72 0 0,1 38,136 Z" fill="url(#rg2)" opacity="0.9"/>
+        <path d="M100,100 L38,64 A72,72 0 0,1 100,28 Z" fill="url(#rg2)" opacity="0.9"/>
+        <circle cx="100" cy="100" r="17" fill="#04080f"/>
+        <circle cx="100" cy="100" r="11" fill="url(#rg2)"/>
+      </svg>
+                    <h2 class="fade" style="font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;color:var(--white);">سپاسگزاریم</h2>
+                    <p class="c-muted mt-2 fade-2" style="max-width:520px;margin:10px auto;line-height:1.8;font-size:0.88rem;">از استاد محترم سرکار خانم شاهرخ بابت راهنمایی‌ها و از همکلاسی‌ها بابت همراهی</p>
+                    <div class="fade-2" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px auto;">
+                        <div class="info-chip" style="border-color:rgba(245,192,0,0.5);">👤 <span class="c-gold bold">ندا همت</span></div>
+                        <div class="info-chip" style="border-color:rgba(245,192,0,0.5);">👤 <span class="c-gold bold">محسن بهاری</div>
+                        <div class="info-chip" style="border-color:rgba(245,192,0,0.5);">👤 <span class="c-gold bold">حمیدرضا افشارقاری></div>
+                        <div class="info-chip">👩‍🏫 <span>استاد: محدثه شاهرخ</span></div>
+                        <div class="info-chip" style="border-color:rgba(0,255,179,0.3);">📅 <span class="c-green">۱۷ خرداد ۱۴۰۵</span></div>
+                    </div>
+                </div>
+
+                <!-- GRADE TABLE -->
+                <div class="card fade-3" style="padding:20px;border-color:rgba(0,212,255,0.4);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+                        <h3 class="bold c-neon">📝 ثبت نمرات دانشجویان</h3>
+                        <div style="display:flex;gap:10px;">
+                            <button onclick="calcAvg()" style="background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border:none;padding:8px 20px;border-radius:50px;font-family:Vazirmatn,sans-serif;font-size:0.82rem;font-weight:900;cursor:pointer;">محاسبه میانگین ▶</button>
+                            <button onclick="clearGrades()" style="background:transparent;color:var(--red);border:1px solid rgba(255,34,85,0.5);padding:8px 16px;border-radius:50px;font-family:Vazirmatn,sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.3s;">پاک کردن</button>
+                        </div>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="grade-table" id="gradeTable">
+                            <thead>
+                                <tr>
+                                    <th>ردیف</th>
+                                    <th>نام و نام خانوادگی</th>
+                                    <th>کد دانشجویی</th>
+                                    <th>نمره (۰–۲۰)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gradeBody"></tbody>
+                            <tfoot>
+                                <tr class="avg-row">
+                                    <td colspan="3" style="text-align:right;padding:11px 16px;font-weight:700;">📊 میانگین کلاس</td>
+                                    <td style="padding:11px;"><span class="avg-badge" id="avgDisplay">—</span></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <button onclick="addGradeRow()" style="margin-top:10px;background:rgba(0,212,255,0.06);color:var(--neon);border:1px dashed rgba(0,212,255,0.35);padding:9px 20px;border-radius:10px;font-family:Vazirmatn,sans-serif;font-size:0.82rem;cursor:pointer;width:100%;transition:all 0.3s;">+ افزودن دانشجو</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- end slide-container -->
+
+    <script>
+        let cur = 0;
+        const TOTAL = 30;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            buildNav();
+            buildScrollInd();
+            initGrades();
+            updateNav();
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                    e.preventDefault();
+                    changeSlide(1);
+                }
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    changeSlide(-1);
+                }
+            });
+
+            let tx = 0;
+            document.addEventListener('touchstart', e => {
+                tx = e.touches[0].clientX;
+            });
+            document.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - tx;
+                if (Math.abs(dx) > 50) changeSlide(dx > 0 ? -1 : 1);
+            });
+
+            let wLock = false;
+            document.addEventListener('wheel', e => {
+                const sl = document.getElementById('s' + cur);
+                const atB = sl.scrollTop + sl.clientHeight >= sl.scrollHeight - 10;
+                const atT = sl.scrollTop <= 0;
+                if (!wLock) {
+                    if (e.deltaY > 0 && atB) {
+                        wLock = true;
+                        changeSlide(1);
+                        setTimeout(() => wLock = false, 700);
+                    }
+                    if (e.deltaY < 0 && atT) {
+                        wLock = true;
+                        changeSlide(-1);
+                        setTimeout(() => wLock = false, 700);
+                    }
+                }
+            }, {
+                passive: true
+            });
+        });
+
+        function buildNav() {
+            const d = document.getElementById('navDots');
+            for (let i = 0; i < TOTAL; i++) {
+                const b = document.createElement('button');
+                b.className = 'nav-dot';
+                b.title = 'اسلاید ' + (i + 1);
+                b.onclick = () => goToSlide(i);
+                d.appendChild(b);
+            }
+        }
+
+        function buildScrollInd() {
+            const ind = document.getElementById('scrollInd');
+            for (let i = 0; i < TOTAL; i += 2) {
+                const b = document.createElement('button');
+                b.className = 's-dot';
+                b.onclick = () => goToSlide(i);
+                ind.appendChild(b);
+            }
+        }
+
+        function changeSlide(dir) {
+            const n = cur + dir;
+            if (n < 0 || n >= TOTAL) return;
+            goToSlide(n);
+        }
+
+        function goToSlide(idx) {
+            document.getElementById('s' + cur).classList.remove('active');
+            cur = idx;
+            const next = document.getElementById('s' + cur);
+            next.classList.add('active');
+            next.scrollTop = 0;
+            updateNav();
+            if (idx === 11) setTimeout(animateDoseBars, 400);
+            if (idx === 20) setTimeout(animateDoseBars2, 400);
+        }
+
+        function updateNav() {
+            document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+            document.querySelectorAll('.s-dot').forEach((d, i) => d.classList.toggle('active', cur >= i * 2 && cur < i * 2 + 2));
+            document.getElementById('navBar').style.width = ((cur + 1) / TOTAL * 100) + '%';
+            document.getElementById('slideCounter').textContent = toFA(cur + 1) + ' / ' + toFA(TOTAL);
+        }
+
+        function toFA(n) {
+            return String(n).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹' [d]);
+        }
+
+        function animateDoseBars() {
+            document.querySelectorAll('#doseBars .dose-bar').forEach(b => {
+                const w = b.dataset.w;
+                b.style.width = '0%';
+                setTimeout(() => {
+                    b.style.width = w + '%';
+                }, 100);
+            });
+        }
+
+        function animateDoseBars2() {
+            document.querySelectorAll('#doseBars2 .dose-bar').forEach(b => {
+                const w = b.dataset.w;
+                b.style.width = '0%';
+                setTimeout(() => {
+                    b.style.width = w + '%';
+                }, 100);
+            });
+        }
+
+        function tglChk(el) {
+            el.classList.toggle('done');
+            const box = el.querySelector('.check-box');
+            const tick = box.querySelector('span');
+            if (el.classList.contains('done')) {
+                box.style.background = 'var(--green)';
+                box.style.borderColor = 'var(--green)';
+                tick.style.display = 'block';
+            } else {
+                box.style.background = 'transparent';
+                box.style.borderColor = 'var(--neon)';
+                tick.style.display = 'none';
+            }
+        }
+
+        let rowCnt = 0;
+
+        function initGrades() {
+            for (let i = 0; i < 5; i++) addGradeRow();
+        }
+
+        function addGradeRow() {
+            rowCnt++;
+            const tbody = document.getElementById('gradeBody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td style="text-align:center;color:var(--muted);font-size:0.85rem;">${toFA(rowCnt)}</td><td><input class="grade-input" placeholder="نام و نام خانوادگی" type="text" oninput="calcAvg()"></td><td><input class="grade-input" placeholder="کد دانشجویی" type="text"></td><td><input class="grade-input grade-num" placeholder="—" type="number" min="0" max="20" step="0.25" oninput="calcAvg()" style="color:var(--neon);font-weight:700;"></td>`;
+            tbody.appendChild(tr);
+        }
+
+        function calcAvg() {
+            const inputs = document.querySelectorAll('.grade-num');
+            let sum = 0,
+                cnt = 0;
+            inputs.forEach(inp => {
+                const v = parseFloat(inp.value);
+                if (!isNaN(v) && v >= 0 && v <= 20) {
+                    sum += v;
+                    cnt++;
+                }
+            });
+            const avg = cnt > 0 ? (sum / cnt).toFixed(2) : '—';
+            const el = document.getElementById('avgDisplay');
+            el.textContent = avg;
+            if (cnt > 0) {
+                const n = parseFloat(avg);
+                el.style.background = n >= 15 ? 'linear-gradient(135deg,var(--green),var(--neon))' : n >= 10 ? 'linear-gradient(135deg,var(--gold),var(--fire))' : 'linear-gradient(135deg,var(--red),var(--fire))';
+            }
+        }
+
+        function clearGrades() {
+            document.querySelectorAll('.grade-num,.grade-input').forEach(inp => inp.value = '');
+            const el = document.getElementById('avgDisplay');
+            el.textContent = '—';
+            el.style.background = 'linear-gradient(135deg,var(--neon),var(--neon2))';
+        }
+    </script>
+</body>
+
+</html>
